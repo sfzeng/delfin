@@ -191,3 +191,8 @@ snmp_security_level = {
     'type': 'string',
     'enum': ['AuthPriv', 'AuthNoPriv', 'NoAuthNoPriv'],
 }
+
+pub_key_type = {
+    'type': 'string',
+    'enum': ['dsa', 'ecdsa', 'ed25519', 'rsa'],
+}

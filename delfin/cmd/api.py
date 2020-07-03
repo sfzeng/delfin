@@ -31,6 +31,7 @@ from delfin.common import config  # noqa
 from delfin import service
 from delfin import utils
 from delfin import version
+from delfin import db
 
 CONF = cfg.CONF
 
@@ -41,6 +42,7 @@ def main():
          version=version.version_string())
     log.setup(CONF, "delfin")
     utils.monkey_patch()
+    db.register_db()
 
     launcher = service.process_launcher()
     api_server = service.WSGIService('delfin', coordination=True)

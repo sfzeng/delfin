@@ -34,7 +34,7 @@ from sqlalchemy import create_engine
 from delfin import exception
 from delfin.common import sqlalchemyutils
 from delfin.db.sqlalchemy import models
-from delfin.db.sqlalchemy.models import Storage, AccessInfo
+from delfin.db.sqlalchemy.models import Storage, AccessInfo, AlertSource
 from delfin.i18n import _
 
 CONF = cfg.CONF
@@ -83,7 +83,8 @@ def get_backend():
 def register_db():
     """Create database and tables."""
     models = (Storage,
-              AccessInfo
+              AccessInfo,
+              AlertSource
               )
     engine = create_engine(CONF.database.connection, echo=False)
     for model in models:

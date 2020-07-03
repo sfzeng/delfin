@@ -14,13 +14,42 @@
 
 from delfin.api.validation import parameter_types
 
+
 update = {
     'type': 'object',
     'properties': {
-        'host': parameter_types.hostname_or_ip_address,
-        'port': parameter_types.tcp_udp_port,
-        'username': {'type': 'string', 'minLength': 1, 'maxLength': 255},
-        'password': {'type': 'string', 'minLength': 1, 'maxLength': 255},
+        'vendor': {'type': 'string', 'minLength': 1, 'maxLength': 255},
+        'model': {'type': 'string', 'minLength': 1, 'maxLength': 255},
+        'rest_access': {
+            'type': 'object',
+            'properties': {
+                'host': parameter_types.hostname_or_ip_address,
+                'port': parameter_types.tcp_udp_port,
+                'username': {'type': 'string', 'minLength': 1,
+                             'maxLength': 255},
+                'password': {'type': 'string', 'minLength': 1,
+                             'maxLength': 255}
+            },
+            'required': ['host', 'port', 'username', 'password'],
+            'additionalProperties': False
+        },
+        'ssh_access': {
+            'type': 'object',
+            'properties': {
+                'host': parameter_types.hostname_or_ip_address,
+                'port': parameter_types.tcp_udp_port,
+                'username': {'type': 'string', 'minLength': 1,
+                             'maxLength': 255},
+                'password': {'type': 'string', 'minLength': 1,
+                             'maxLength': 255},
+                'pub_key': {'type': 'string', 'minLength': 1,
+                            'maxLength': 255},
+                'pub_key_type': parameter_types.pub_key_type
+            },
+            'required': ['host', 'port', 'username', 'password', 'pub_key',
+                         'pub_key_type'],
+            'additionalProperties': False
+        },
         'extra_attributes': {
             'type': 'object',
             'patternProperties': {
@@ -30,6 +59,9 @@ update = {
             }
         }
     },
-    'required': ['username', 'password'],
+    'anyOf': [
+        {'required': ['rest_access']},
+        {'required': ['ssh_access']}
+    ],
     'additionalProperties': False
 }
