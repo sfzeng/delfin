@@ -278,6 +278,17 @@ def fake_update_access_info(self, context, access_info):
     return access_info
 
 
+def fake_ssh_key_info(self, context):
+    ssh_key_info = {
+        'key': 'AAAAC3NzaC1lZDI1NTE5AAAAIF1SjI+YnvvSVqqOpuPkJvDUk539S'
+               'UnxdTgy2cKcMPjf',
+        'type': 'ssh-ed25519',
+        'fingerprint': '73:d8:34:18:70:2a:ae:d8:1c:a5:44:40:ef:50:d0:63'
+    }
+
+    return ssh_key_info
+
+
 def fake_volume_get_all(context, marker=None,
                         limit=None, sort_keys=None,
                         sort_dirs=None, filters=None, offset=None):

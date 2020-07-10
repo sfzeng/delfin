@@ -17,7 +17,7 @@ from unittest import mock
 from delfin import db
 from delfin import exception
 from delfin import test
-from delfin.api.v1.access_info import AccessInfoController
+from delfin.api.v1.access_info import AccessInfoController, SSHController
 from delfin.tests.unit.api import fakes
 
 
@@ -27,6 +27,7 @@ class TestAccessInfoController(test.TestCase):
         super(TestAccessInfoController, self).setUp()
         self.driver_api = mock.Mock()
         self.controller = AccessInfoController()
+        self.ssh_controller = SSHController()
         self.mock_object(self.controller, 'driver_api', self.driver_api)
 
     def test_show(self):
@@ -105,4 +106,30 @@ class TestAccessInfoController(test.TestCase):
             "created_at": "2020-06-15T09:50:31.698956",
             "updated_at": "2020-06-15T09:50:31.698956"
         }
+        self.assertDictEqual(expctd_dict, res_dict)
+
+    def test_get_key_with_invalid_input(self):
+        self.mock_object(
+            self.ssh_controller.driver_api, 'get_ssh_key',
+            mock.Mock(side_effect=exception.InvalidInput('Port is invalid.')))
+        req = fakes.HTTPRequest.blank('/ssh-key/?port=22')
+        self.assertRaises(exception.InvalidInput,
+                          self.ssh_controller.get,
+                          req)
+
+    def test_get_key(self):
+        fake_ssh_key_info = fakes.fake_ssh_key_info(None, None)
+        self.mock_object(
+            self.ssh_controller.driver_api, 'get_ssh_key',
+            mock.Mock(return_value=fake_ssh_key_info))
+
+        expctd_dict = {
+            'key': 'AAAAC3NzaC1lZDI1NTE5AAAAIF1SjI+YnvvSVqqOpuPkJvDUk539S'
+                   'UnxdTgy2cKcMPjf',
+            'type': 'ssh-ed25519',
+            'fingerprint': '73:d8:34:18:70:2a:ae:d8:1c:a5:44:40:ef:50:d0:63'
+        }
+
+        req = fakes.HTTPRequest.blank('/ssh-key/?host=10.0.0.1&port=22')
+        res_dict = self.ssh_controller.get(req)
         self.assertDictEqual(expctd_dict, res_dict)

@@ -62,7 +62,7 @@ class SSHController(wsgi.Controller):
         self._view_builder = access_info_viewer.ViewBuilder()
         self.driver_api = driverapi.API()
 
-    def index(self, req):
+    def get(self, req):
         """Get remote host key for ssh protocol."""
         ctxt = req.environ.get('delfin.context')
         query_params = {}
