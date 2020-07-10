@@ -63,6 +63,10 @@ class APIRouter(common.APIRouter):
                        action="delete",
                        conditions={"method": ["DELETE"]})
 
+        self.resources['ssh-key'] = access_info.create_ssh_resource()
+        mapper.resource("ssh-key", "ssh-key",
+                        controller=self.resources['ssh-key'])
+
         self.resources['storage-pools'] = storage_pools.create_resource()
         mapper.resource("storage-pool", "storage-pools",
                         controller=self.resources['storage-pools'])

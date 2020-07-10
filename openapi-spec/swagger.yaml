@@ -976,6 +976,59 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorSpec'
+  '/v1/ssh-key':
+    get:
+      tags:
+        - ssh-key
+      description: Get ssh-key for a specific device.
+      parameters:
+        - name: host
+          in: query
+          description: Domain name or ip of the device.
+          required: true
+          style: form
+          explode: true
+          schema:
+            type: string
+        - name: port
+          in: query
+          description: Port of the device.
+          required: true
+          style: form
+          explode: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SSHKeyGetRespSpec'
+        '400':
+          description: BadRequest
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorSpec'
+        '401':
+          description: NotAuthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorSpec'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorSpec'
+        '500':
+          description: An unexpected error occured.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorSpec'
 components:
   schemas:
     BaseModel:
@@ -1346,6 +1399,31 @@ components:
             host:
               type: string
               example: 10.0.0.1
+    SSHKeyGetRespSpec:
+      description: >-
+        Response for GET ssh-key.
+      required:
+        - key
+        - key_type
+        - fingerprint
+      type: object
+      properties:
+        key:
+          type: string
+          description: >-
+            Public key of the device.
+          example: AAAAC3NzaC1lZDI1NTE5AAAAIF1SjI+YnvvSVqqOpuPkJvDUk539SUnxdTgy2cKcMPjf
+        key_type:
+          type: string
+          description: >-
+            Key type, like ssh-ed25519, ecdsa-sha2-nistp256, ssh-rsa, ssh-dss, etc.
+          example: ssh-ed25519
+        fingerprint:
+          type: string
+          description: >-
+            Fingerprint of the key, in MD5 format.
+          example: >-
+            73:d8:34:18:70:2a:ae:d8:1c:a5:44:40:ef:50:d0:63
     ErrorSpec:
       required:
         - error_code

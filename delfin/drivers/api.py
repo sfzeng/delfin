@@ -19,6 +19,7 @@ from oslo_utils import uuidutils
 
 from delfin.drivers import helper
 from delfin.drivers import manager
+from delfin.drivers.driver import StorageDriver
 
 LOG = log.getLogger(__name__)
 
@@ -101,3 +102,14 @@ class API(object):
     def clear_alert(self, context, storage_id, alert):
         """Clear alert from storage system."""
         pass
+
+    def get_ssh_key(self, context, host, port):
+        """Get remote host key for ssh protocol.
+        :param host: ip or domain name of the remote device.
+        :param port: port for ssh connection.
+        :return: returns a dict with the following fields:
+            key: public key of the remote host.
+            type: key type, like rsa, ecdsa, ed25519.
+            fingerprint: the fingerprint of the key.
+        """
+        return StorageDriver.get_ssh_key(context, host, port)

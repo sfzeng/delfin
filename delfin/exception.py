@@ -205,3 +205,7 @@ class DuplicateExtension(DelfinException):
 
 class ImproperIPVersion(DelfinException):
     msg_fmt = _("Provided improper IP version {0}.")
+
+
+class SSHConnectionFailed(DelfinException):
+    msg_fmt = _("SSH connection failed: {0}.")
